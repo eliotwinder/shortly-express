@@ -1,4 +1,4 @@
-Shortly.LinksView = Backbone.View.extend({
+  Shortly.LinksView = Backbone.View.extend({
   className: 'links',
 
   initialize: function(){

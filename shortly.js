@@ -51,6 +51,7 @@ function(req, res) {
 
   new Link({ url: uri }).fetch().then(function(found) {
     if (found) {
+      console.log(found.attributes);
       res.send(200, found.attributes);
     } else {
       util.getUrlTitle(uri, function(err, title) {
@@ -110,3 +111,51 @@ app.get('/*', function(req, res) {
 
 console.log('Shortly is listening on 4568');
 app.listen(4568);
+
+
+
+
+// Links.query({where: {'visits': 2}})
+//   .fetchOne()
+//   .then(function(model){
+//     console.log('worked');
+//     console.log(model);
+//   });
+
+var joe = new User();
+
+joe.save().then(function(arg){
+  console.log("Joe was saved. \n")
+  console.log("There exists a passed argument: ", arg)
+});
+// Users.query({where: {'username': '*'}})
+// Users.query({where: {'username': 'Joe'}})
+// // Users.query({where: {}})
+//   .fetchOne()
+//   .then(function(model){
+//     console.log('worked');
+//     console.log(model);
+//   });
+
+Users.query({where: {'username': 'Joe', 'hashedpass': 'worked'}})
+      // Users.query({where: {}})
+        .fetchOne()
+        .then(function(model){
+          console.log('worked');
+          console.log(model);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
