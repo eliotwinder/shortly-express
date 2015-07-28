@@ -128,29 +128,6 @@ console.log('Shortly is listening on 4568');
 app.listen(4568);
 
 
-// Users.query({where: {'username': 'eliot'}})
-//       // Users.query({where: {}})
-//         .fetchOne()
-//         .then(function(model){
-//           console.log('worked');
-//           console.log(model);
-//         });
-
-
-// var joe = new User();
-
-// joe.save().then(function(arg){
-//   console.log("Joe was saved. \n")
-//   console.log("There exists a passed argument: ", arg)
-// });
-
-
-
-
-
-
-
-
 
 
 
