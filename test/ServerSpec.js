@@ -137,7 +137,7 @@ var xbeforeEach = function(){
       it('Fetches the link url title', function (done) {
         requestWithSession(options, function(error, res, body) {
           db.knex('urls')
-            .where('title', '=', 'Funny animal pictures, funny animals, funniest dogs')
+            .where('title', '=', 'Funny pictures of animals, funny dog pictures')
             .then(function(urls) {
               if (urls['0'] && urls['0']['title']) {
                 var foundTitle = urls['0']['title'];

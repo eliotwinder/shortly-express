@@ -3,6 +3,8 @@ var bcrypt = require('bcrypt-nodejs');
 var Promise = require('bluebird');
 var Link = require('./link');
 
+Promise.promisifyAll(bcrypt);
+
 var User = db.Model.extend({
   tableName: 'users',
   // hasTimestamps: true,
@@ -15,14 +17,13 @@ var User = db.Model.extend({
   },
   initialize: function(){
     this.on('creating', function(model, attrs, options){
-      var that = model;
-      console.log(model)
-    // bcrypt.genSalt(10, function(error, result){
-        that.set('salt', 'salted');
-        that.set('hashedpass', 'hashed');
-      bcrypt.hash(model.get('hashedpass'), null, null, function(error, hashed){
-      // model.save();
-      });
+      return bcrypt.hashAsync(model.get('hashedpass'), null, null)
+        .then( function(hash) {
+          console.log(hash);
+          model.set('hashedpass', hash);
+        }).catch(function(error) {
+          console.log(error);
+        });
         // });
     });
   }
