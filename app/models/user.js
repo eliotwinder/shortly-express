@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 
 var User = db.Model.extend({
   tableName: 'users',
-  // hasTimestamps: true,
+  hasTimestamps: true,
   defaults: {
     username: 'eliot',
     hashedpass: '12345'
@@ -14,16 +14,12 @@ var User = db.Model.extend({
     return this.hasMany(Link);
   },
   initialize: function(){
-
-
     this.on('creating', function(model, attrs, options){
-      console.log('reached line 18');
-      console.log('On signup, here is our new user', model.get('username'));
-      console.log('On signup, here is our new user\'s password', model.get('hashedpass'));
-        bcrypt.hash(model.get('hashedpass'), null, null, function(error, hashed){
-          model.set('hashedpass', hashed);
+        bcrypt.genSalt(10, function(error, result){
+          bcrypt.hash(model.get('hashedpass'), result, null, function(error, hashed){
+            model.set('hashedpass', hashed);
+          });
         });
-  
     });
   }
 });
