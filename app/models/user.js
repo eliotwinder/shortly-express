@@ -17,7 +17,7 @@ var User = db.Model.extend({
   },
   initialize: function(){
     this.on('creating', function(model, attrs, options){
-      return bcrypt.hashAsync(model.get('hashedpass'), 0, null) 
+      return bcrypt.hashAsync(model.get('hashedpass'), null, null) 
         .then( function(hash) {
           console.log(hash, "here22?");
           model.set('hashedpass', hash);
@@ -30,9 +30,9 @@ var User = db.Model.extend({
   compare: function(password) {
     var hashedpass = this.get('hashedpass');
     console.log('hashedpass = ', hashedpass, 'password = ', password);
-    bcrypt.compareAsync(password, hashedpass)
+    return bcrypt.compareAsync(password, hashedpass)
       .then(function(result){
-
+        return result;
         console.log(result, "<< the result");
         console.log('compare got to here, line 34');
       });

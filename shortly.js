@@ -110,13 +110,17 @@ app.post('/login', function(req, res){
 
   new User({'username': user}).fetch().then(function(found){
     if(found) {
-      console.log('our found is ', found);
-
-      var hash = found.get('hashedpass');
-      console.log('our hash is ', hash);
-      console.log('our found.compare invocation evaluates to', found.compare(password));
-      
+      console.log(found.compare(password), 'is the password')
+      return found.compare(password);
+    } else {
+      console.log('user not found shortyl.js line 116', 'send to sign in page')
+      res.end();
+      return false;
     }
+
+  }).then(function(isTruthy){
+    console.log('boooooooooolean', isTruthy);
+    // create session with authentication
   });
 
 });
