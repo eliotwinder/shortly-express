@@ -79,7 +79,22 @@ function(req, res) {
 // Write your authentication routes here
 /************************************************************/
 
+app.get('/signup', function(req, res) {
+  res.render('signup');
+});
 
+app.post('/signup', function(req, res) {
+  // console.log('req', req);
+  var user = {
+    username: req.body.username,
+    hashedpass: req.body.password
+  }
+
+  var newUser = new User(user);
+  newUser.save();
+
+  res.end();
+});
 
 /************************************************************/
 // Handle the wildcard route last - if all other routes fail
@@ -113,37 +128,21 @@ console.log('Shortly is listening on 4568');
 app.listen(4568);
 
 
+// Users.query({where: {'username': 'eliot'}})
+//       // Users.query({where: {}})
+//         .fetchOne()
+//         .then(function(model){
+//           console.log('worked');
+//           console.log(model);
+//         });
 
 
-// Links.query({where: {'visits': 2}})
-//   .fetchOne()
-//   .then(function(model){
-//     console.log('worked');
-//     console.log(model);
-//   });
+// var joe = new User();
 
-var joe = new User();
-
-joe.save().then(function(arg){
-  console.log("Joe was saved. \n")
-  console.log("There exists a passed argument: ", arg)
-});
-// Users.query({where: {'username': '*'}})
-// Users.query({where: {'username': 'Joe'}})
-// // Users.query({where: {}})
-//   .fetchOne()
-//   .then(function(model){
-//     console.log('worked');
-//     console.log(model);
-//   });
-
-Users.query({where: {'username': 'Joe', 'hashedpass': 'worked'}})
-      // Users.query({where: {}})
-        .fetchOne()
-        .then(function(model){
-          console.log('worked');
-          console.log(model);
-        });
+// joe.save().then(function(arg){
+//   console.log("Joe was saved. \n")
+//   console.log("There exists a passed argument: ", arg)
+// });
 
 
 

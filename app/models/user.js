@@ -7,25 +7,23 @@ var User = db.Model.extend({
   tableName: 'users',
   // hasTimestamps: true,
   defaults: {
-    username: 'Joe',
+    username: 'eliot',
     hashedpass: '12345'
   },
   users: function() {
     return this.hasMany(Link);
   },
   initialize: function(){
+
+
     this.on('creating', function(model, attrs, options){
       console.log('reached line 18');
-      
-      bcrypt.genSalt(10, function(error, salt){
-        console.log('reached line 20');
-        bcrypt.hash('12345', salt, null, function(error, hashed){
-          console.log('line 23', salt, hashed);
+      console.log('On signup, here is our new user', model.get('username'));
+      console.log('On signup, here is our new user\'s password', model.get('hashedpass'));
+        bcrypt.hash(model.get('hashedpass'), null, null, function(error, hashed){
+          model.set('hashedpass', hashed);
         });
-
-      });
-      // model.set('hashedpass', 'working');
-
+  
     });
   }
 });
