@@ -84,7 +84,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-  // console.log('req', req);
+  
   var user = {
     username: req.body.username,
     hashedpass: req.body.password
@@ -94,6 +94,31 @@ app.post('/signup', function(req, res) {
   newUser.save();
 
   res.end();
+
+});
+
+app.get('/login', function(req, res){
+  res.render('login');
+});
+
+app.post('/login', function(req, res){
+  var user = req.body.username;
+  var password = req.body.password;
+
+  console.log('our user is ', user);
+  console.log('our password is ', password);
+
+  new User({'username': user}).fetch().then(function(found){
+    if(found) {
+      console.log('our found is ', found);
+
+      var hash = found.get('hashedpass');
+      console.log('our hash is ', hash);
+      console.log('our found.compare invocation evaluates to', found.compare(password));
+      
+    }
+  });
+
 });
 
 /************************************************************/

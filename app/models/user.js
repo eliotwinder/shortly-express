@@ -17,31 +17,36 @@ var User = db.Model.extend({
   },
   initialize: function(){
     this.on('creating', function(model, attrs, options){
-      return bcrypt.hashAsync(model.get('hashedpass'), null, null)
+      return bcrypt.hashAsync(model.get('hashedpass'), 0, null) 
         .then( function(hash) {
-          console.log(hash);
+          console.log(hash, "here22?");
           model.set('hashedpass', hash);
         }).catch(function(error) {
-          console.log(error);
+          console.log(error, "here25?");
         });
-        // });
     });
+  },
+   
+  compare: function(password) {
+    var hashedpass = this.get('hashedpass');
+    console.log('hashedpass = ', hashedpass, 'password = ', password);
+    bcrypt.compareAsync(password, hashedpass)
+      .then(function(result){
+
+        console.log(result, "<< the result");
+        console.log('compare got to here, line 34');
+      });
   }
 });
 
-module.exports = User;
-
-// bcrypt.hash("bacon", null, null, function(err, hash) {
-//     // Store hash in your password DB.
-// });
- 
-// // Load hash from your password DB.
-// bcrypt.compare("bacon", hash, function(err, res) {
+// Load hash from your password DB.
+// bcrypt.compare('B4c0/\/', hash, function(err, res) {
 //     // res == true
 // });
-// bcrypt.compare("veggies", hash, function(err, res) {
-//     // res = false
+// bcrypt.compare('not_bacon', hash, function(err, res) {
+//     // res == false
 // });
 
-//brush
+module.exports = User;
+
 
