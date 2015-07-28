@@ -2,7 +2,7 @@ var express = require('express');
 var util = require('./lib/utility');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
 
 var db = require('./app/config');
 var Users = require('./app/collections/users');
@@ -20,8 +20,8 @@ app.use(partials());
 app.use(bodyParser.json());
 // Parse forms (signup/login)
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({secret: 'secret'}));
 app.use(express.static(__dirname + '/public'));
-
 
 app.get('/', 
 function(req, res) {
@@ -84,7 +84,7 @@ app.get('/signup', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-  // console.log('req', req);
+  
   var user = {
     username: req.body.username,
     hashedpass: req.body.password
@@ -94,6 +94,60 @@ app.post('/signup', function(req, res) {
   newUser.save();
 
   res.end();
+
+});
+
+app.get('/login', function(req, res){
+  res.render('login');
+});
+
+app.post('/login', function(req, res){
+  var user = req.body.username;
+  var password = req.body.password;
+
+  console.log('our user is ', user);
+  console.log('our password is ', password);
+
+  new User({'username': user}).fetch().then(function(found){
+    if(found) {
+      console.log(found.compare(password), 'is the password')
+      return found.compare(password);
+    } else {
+      console.log('user not found shortyl.js line 116', 'send to sign in page')
+      res.end();
+      return false;
+    }
+
+  }).then(function(isTruthy){
+    console.log('line 122')
+    if(isTruthy){
+      req.session.regenerate(function(){
+        req.session.user = user;
+        console.log(req.session);
+        res.redirect('/links');
+      });
+    }
+  });
+});
+
+var restrict = function (req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    req.session.error = 'Access denied!';
+    res.redirect('/login');
+  }
+};
+ 
+app.get('/logout', function(req, res){
+    req.session.destroy(function(){
+        res.redirect('/');
+    });
+});
+ 
+app.get('/restricted', restrict, function(req, res){
+  console.log('This is the restricted area! Hello ' + req.session.user + '! click <a href="/logout">here to logout</a>');
+  res.redirect('/links');
 });
 
 /************************************************************/
@@ -126,12 +180,3 @@ app.get('/*', function(req, res) {
 
 console.log('Shortly is listening on 4568');
 app.listen(4568);
-
-
-
-
-
-
-
-
-
